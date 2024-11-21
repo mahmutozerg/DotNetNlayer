@@ -1,5 +1,4 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Configuration;
+using DotNetNlayer.API.Middleware;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +13,8 @@ if (builder.Environment.IsDevelopment())
 // gelecekte core layerde bir Interface oluştur içinde key adlı değişken bulunduracak
 // diğer katmanlara DI ile ata
 var mySecretValue = builder.Configuration["MySecretKey"];
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
 
@@ -24,7 +25,10 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(); // scalar/v1
     app.MapOpenApi();
 }
-
-
-
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization(); 
+app.MapControllers();
+app.UseExceptionHandlingMiddleware();
 app.Run();
