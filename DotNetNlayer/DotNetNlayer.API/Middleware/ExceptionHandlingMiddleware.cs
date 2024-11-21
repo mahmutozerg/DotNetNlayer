@@ -26,18 +26,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             
             switch (exception)
             {
-                case AlreadyExistException alreadyExistException:
-                {
-                    title = alreadyExistException.Title;
-                    statusCode = (int)alreadyExistException.StatusCode;
-                    
-                    var formattedMessage = FormatExceptionMessage(alreadyExistException.MessageFormat, alreadyExistException.MessageProps);
-
-                    messages.Add(formattedMessage);
-
-                    break;
-                 }
-              case CustomBaseException customBaseException:
+                case CustomBaseException customBaseException:
                 {
                     statusCode = (int)customBaseException.StatusCode;
                     title = customBaseException.Title;

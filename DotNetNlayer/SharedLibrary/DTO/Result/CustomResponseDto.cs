@@ -31,11 +31,7 @@ public class CustomResponseDto<TEntity>
         return new CustomResponseDto<TEntity>(true, default, statusCode, null);
     }
 
-    public static CustomResponseDto<TEntity> Fail(int statusCode, ProblemDetails problemDetails)
-    {
-        return new CustomResponseDto<TEntity>(false, default, statusCode, problemDetails);
-    }
-
+    // AKA fail
     public static CustomResponseDto<TEntity> Exception(ProblemDetails problemDetails)
     {
         return new CustomResponseDto<TEntity>(false, default, (int)problemDetails.Status, problemDetails);
