@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetNlayer.API", "DotNetNlayer.API\DotNetNlayer.API.csproj", "{56200C46-6266-41B2-88EB-6C1E0FB51937}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthServerAPI", "AuthServerAPI", "{3CC1AFE0-D69E-4591-96DB-539B3B9063A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BusinessAPI", "BusinessAPI", "{FC39736A-8B5D-4771-9873-D818871116AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetNlayer.Core", "DotNetNlayer.Core\DotNetNlayer.Core.csproj", "{419E3E1B-5E85-451B-A27D-7D6A2136B717}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetNlayer.Repository", "DotnetNlayer.Repository\DotnetNlayer.Repository.csproj", "{80DE9C52-A00C-4859-B7E1-21207FF03A14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetNlayer.Service", "DotnetNlayer.Service\DotnetNlayer.Service.csproj", "{D36F8385-4BF7-4FC9-889A-E6BA6B475189}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56200C46-6266-41B2-88EB-6C1E0FB51937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56200C46-6266-41B2-88EB-6C1E0FB51937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56200C46-6266-41B2-88EB-6C1E0FB51937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56200C46-6266-41B2-88EB-6C1E0FB51937}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419E3E1B-5E85-451B-A27D-7D6A2136B717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419E3E1B-5E85-451B-A27D-7D6A2136B717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419E3E1B-5E85-451B-A27D-7D6A2136B717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419E3E1B-5E85-451B-A27D-7D6A2136B717}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80DE9C52-A00C-4859-B7E1-21207FF03A14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80DE9C52-A00C-4859-B7E1-21207FF03A14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80DE9C52-A00C-4859-B7E1-21207FF03A14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80DE9C52-A00C-4859-B7E1-21207FF03A14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56200C46-6266-41B2-88EB-6C1E0FB51937} = {3CC1AFE0-D69E-4591-96DB-539B3B9063A9}
+		{419E3E1B-5E85-451B-A27D-7D6A2136B717} = {3CC1AFE0-D69E-4591-96DB-539B3B9063A9}
+		{80DE9C52-A00C-4859-B7E1-21207FF03A14} = {3CC1AFE0-D69E-4591-96DB-539B3B9063A9}
+		{D36F8385-4BF7-4FC9-889A-E6BA6B475189} = {3CC1AFE0-D69E-4591-96DB-539B3B9063A9}
+	EndGlobalSection
+EndGlobal
