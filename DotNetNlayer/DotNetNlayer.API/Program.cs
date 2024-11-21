@@ -10,9 +10,8 @@ if (builder.Environment.IsDevelopment())
 }
 
 
-// gelecekte core layerde bir Interface oluştur içinde key adlı değişken bulunduracak
-// diğer katmanlara DI ile ata
-var mySecretValue = builder.Configuration["MySecretKey"];
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -31,4 +30,4 @@ app.UseAuthentication();
 app.UseAuthorization(); 
 app.MapControllers();
 app.UseExceptionHandlingMiddleware();
-app.Run();
+await app.RunAsync();

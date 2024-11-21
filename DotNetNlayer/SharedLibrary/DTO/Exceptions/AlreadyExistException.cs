@@ -7,7 +7,7 @@ namespace SharedLibrary.DTO.Exceptions;
 /// </summary>
 public class AlreadyExistException:CustomBaseException
 {
-    public override string MessageFormat =>  "{propName} : there is already a record exist with '{propValue} value";
+    public override string MessageFormat =>  "{propName} : there is already a record exist with '{propValue}' value";
     public override string Title => "Already Exist Error";
     public override HttpStatusCode StatusCode => HttpStatusCode.Conflict;
    

@@ -58,11 +58,12 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
                 Detail = string.Join(Environment.NewLine,messages.ToArray())
             };
             
-            logger.LogError("Exception Detail {@Exception-Status} - {@Exception-Title} - {@Exception-Detail} - {@Context-Path}",
+            logger.LogError(exception,"Exception Detail {@ExceptionStatus} - {@ExceptionTitle} - {@ExceptionDetail} - {@ContextPath}",
                 problemDetails.Status,
                 problemDetails.Title,
                 problemDetails.Detail,
                 context.Request.Path.Value);
+
             
             
             var responseResult = JsonSerializer.Serialize(CustomResponseDto<ProblemDetails>.Exception(problemDetails));
@@ -75,7 +76,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     /// <param name="messageFormat"></param>
     /// <param name="messageProps"></param>
     /// <returns></returns>
-    private string FormatExceptionMessage(string messageFormat, Dictionary<string, string> messageProps)
+    private static string FormatExceptionMessage(string messageFormat, Dictionary<string, string> messageProps)
     {
         foreach (var (key, value) in messageProps)
         {
