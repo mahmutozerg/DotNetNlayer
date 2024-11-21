@@ -16,4 +16,8 @@
       <ProjectReference Include="..\DotnetNlayer.Service\DotnetNlayer.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Middleware\" />
+    </ItemGroup>
+
 </Project>

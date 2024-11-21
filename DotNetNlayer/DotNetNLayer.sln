@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetNlayer.Repository", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotnetNlayer.Service", "DotnetNlayer.Service\DotnetNlayer.Service.csproj", "{D36F8385-4BF7-4FC9-889A-E6BA6B475189}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{863A81B6-B257-4472-AA19-8E82ADBC0575}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D36F8385-4BF7-4FC9-889A-E6BA6B475189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{863A81B6-B257-4472-AA19-8E82ADBC0575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{863A81B6-B257-4472-AA19-8E82ADBC0575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{863A81B6-B257-4472-AA19-8E82ADBC0575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{863A81B6-B257-4472-AA19-8E82ADBC0575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{56200C46-6266-41B2-88EB-6C1E0FB51937} = {3CC1AFE0-D69E-4591-96DB-539B3B9063A9}

@@ -10,6 +10,7 @@ if (builder.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
 }
 
+
 // gelecekte core layerde bir Interface oluştur içinde key adlı değişken bulunduracak
 // diğer katmanlara DI ile ata
 var mySecretValue = builder.Configuration["MySecretKey"];
