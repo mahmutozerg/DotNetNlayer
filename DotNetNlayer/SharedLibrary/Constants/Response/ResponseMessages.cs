@@ -8,5 +8,6 @@ public static class ResponseMessages
     public const string InternalServerError  = "Internal Server Error";
     public const string AlreadyExists = "Already Exists";
     public const string UpdatePasswordMissMatch  = "Please check your password";
+    public const string SomethingWentWrong = "Something went wrong";
 
 }

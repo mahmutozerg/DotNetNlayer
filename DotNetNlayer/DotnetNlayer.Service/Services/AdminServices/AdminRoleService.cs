@@ -35,21 +35,21 @@ public class AdminRoleService:GenericService<AppRole>,IAdminRoleService
             throw new AlreadyExistException(nameof(role), role);
         
         var result = await _roleManager.CreateAsync(new AppRole(role));
-        
+
         if (!result.Succeeded)
-            return CustomResponseDto<NoDataDto>.
-                Fail(ResponseMessages.InternalServerError,
+            return CustomResponseDto<NoDataDto>
+                .Fail(ResponseMessages.SomethingWentWrong,
                     (int)HttpStatusCode.InternalServerError,
-                    string.Join("",result.Errors.Select(e => e.Description)));
+                    string.Join("", result.Errors.Select(e => e.Description)));
+
+
         
         
         return CustomResponseDto<NoDataDto>.Success(StatusCodes.Status200OK);
 
     }
 
-
-
-
+    
     public async Task<CustomResponseDto<NoDataDto>> AddRolesAsync(AddRolesDto roles)
     {
 
@@ -63,7 +63,23 @@ public class AdminRoleService:GenericService<AppRole>,IAdminRoleService
         }
         return CustomResponseDto<NoDataDto>.Success((int)HttpStatusCode.Created);
     }
-
+    public async Task<CustomResponseDto<NoDataDto>> RemoveRoleFromUser(string roleName)
+    {
+        var roleEntity = await _roleManager.FindByNameAsync(roleName);
+        
+        if(roleEntity is null)
+            throw new InvalidParameterException(nameof(roleName), roleName);
+        
+        var result  =await _roleManager.DeleteAsync(roleEntity);
+        
+        if(!result.Succeeded)
+            return CustomResponseDto<NoDataDto>
+                .Fail(ResponseMessages.SomethingWentWrong,
+                    (int)HttpStatusCode.InternalServerError,
+                    string.Join("", result.Errors.Select(e => e.Description)));
+        
+        return CustomResponseDto<NoDataDto>.Success(StatusCodes.Status200OK);
+    }
 
 
     /// <summary>
@@ -90,16 +106,14 @@ public class AdminRoleService:GenericService<AppRole>,IAdminRoleService
         {
             return CustomResponseDto<NoDataDto>.
                 Fail(ResponseMessages.NotFound,
-                    (int)HttpStatusCode.NotFound,
+                    (int)HttpStatusCode.BadRequest,
                     $"The following roles were not found: {string.Join(", ", invalidRoles)} none of the roles added try with corrected roles");
         }
 
         if (validRoles.Count == 0)
         {
-            return CustomResponseDto<NoDataDto>.
-                Fail(ResponseMessages.BadRequest,
-                    (int)HttpStatusCode.BadRequest,
-                    "No valid roles were provided to add.");
+            throw new InvalidParameterException(nameof(roles), string.Join("",roles.ToList()));
+            
         }
         return CustomResponseDto<NoDataDto>.Success((int)HttpStatusCode.OK);
     }

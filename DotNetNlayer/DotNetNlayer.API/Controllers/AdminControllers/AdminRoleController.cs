@@ -45,9 +45,9 @@ public class AdminRoleController :ControllerBase
 
 
     [HttpDelete]
-    public Task<IActionResult> DeleteRole(string roles)
+    public async Task<IActionResult> DeleteRole(string roleName)
     {
-        throw   new NotImplementedException();
+        return new ObjectResult(await _adminRoleService.RemoveRoleFromUser(roleName));
     }
 
 }

@@ -9,6 +9,5 @@ public interface IAdminRoleService:IGenericService<AppRole>
     Task<CustomResponseDto<NoDataDto>> AddRoleAsync(string role);
     Task<CustomResponseDto<NoDataDto>> AddRolesAsync(AddRolesDto roles);
     
-    
-    Task<CustomResponseDto<NoDataDto> >CheckIfRoleExistResultFactoryAsync(HashSet<string> roles);
+    Task<CustomResponseDto<NoDataDto>> RemoveRoleFromUser(string roleName);
 }

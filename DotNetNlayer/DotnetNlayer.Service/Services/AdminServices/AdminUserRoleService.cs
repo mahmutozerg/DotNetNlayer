@@ -49,21 +49,16 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
 
 
         if (user == null)
-        {
-            return CustomResponseDto<NoDataDto>.
-                Fail(ResponseMessages.NotFound,
-                    (int)HttpStatusCode.NotFound,
-                    $"{identifier} not found in records");
-        }
+            throw new NotFoundException(nameof(identifier), identifier);
         
         
         var result = await _userManager.AddToRolesAsync(user, roleNames);
 
         if (result.Succeeded)
-        {
             return CustomResponseDto<NoDataDto>.Success((int)HttpStatusCode.Created);
-        }
+        
        
+        
         return CustomResponseDto<NoDataDto>.
             Fail(ResponseMessages.InternalServerError,
                 (int)HttpStatusCode.InternalServerError,
