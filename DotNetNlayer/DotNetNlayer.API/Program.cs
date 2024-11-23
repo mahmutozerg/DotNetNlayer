@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Security.Claims;
 using DotNetNlayer.API.Middleware;
-using DotNetNlayer.API.Utils.Seeder;
+using DotNetNlayer.API.Seeders;
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
 using DotNetNlayer.Core.Models;
