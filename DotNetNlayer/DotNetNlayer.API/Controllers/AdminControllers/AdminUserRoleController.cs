@@ -1,3 +1,4 @@
+using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.Services;
 using DotNetNlayer.Core.Services.AdminServices;
 using Microsoft.AspNetCore.Authorization;
@@ -22,5 +23,11 @@ public class AdminUserRoleController:ControllerBase
     public async Task<IActionResult> GetUsersInRole(string roleName)
     {
         return new ObjectResult(await _adminUserRoleService.GetUsersWithRolesAsync(roleName));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddUserToRoles(AddUserToRolesDto addUserToRolesDto)
+    {
+        return new ObjectResult(await _adminUserRoleService.AddUserToRolesAsync(addUserToRolesDto.Roles, addUserToRolesDto.UserIdentifier));
     }
 }

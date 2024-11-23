@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using DotNetNlayer.Core.Constants;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
 using DotNetNlayer.Core.Repositories;
@@ -15,7 +16,6 @@ using Newtonsoft.Json;
 using SharedLibrary;
 using SharedLibrary.DTO.Exceptions;
 using SharedLibrary.DTO.Result;
-using SharedLibrary.DTO.Tokens;
 
 namespace DotnetNlayer.Service.Services;
 
@@ -165,23 +165,7 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         return CustomResponseDto<NoDataDto>.Success(200);
     }
 
-    public async Task<CustomResponseDto<NoDataDto>> AddRoleToUser(string userEmail, string roleName)
-    {
-        var user = await _userManager.FindByNameAsync(userEmail.Split("@")[0]);
 
-        if (user is null)
-            throw new UserNotFoundException(nameof(user), userEmail);
-
-        var role = await _roleManager.FindByNameAsync(roleName);
-
-        if (role is null)
-            throw new NotFoundException(nameof(role), roleName);
-
-        await _userManager.AddToRoleAsync(user, roleName);
-
-        return CustomResponseDto<NoDataDto>.Success(201);
-
-    }
     
     public async Task SendDeleteReqToBusinessApi(AppUser appUser)
     {

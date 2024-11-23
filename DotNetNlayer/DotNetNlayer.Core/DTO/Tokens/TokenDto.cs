@@ -1,4 +1,4 @@
-namespace SharedLibrary.DTO.Tokens;
+namespace DotNetNlayer.Core.DTO.Tokens;
 
 public class TokenDto
 {

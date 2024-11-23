@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SharedLibrary.DTO.Tokens;
+namespace DotNetNlayer.Core.DTO.Tokens;
 
 public class CreateTokenByRefreshTokenDto
 {

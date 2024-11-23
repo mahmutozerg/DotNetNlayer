@@ -19,4 +19,6 @@ public class AdminUserRoleRepository:GenericRepository<AppUser>,IAdminUserRoleRe
     {
         return await _userManager.GetUsersInRoleAsync(roleName);
     }
+
+
 }

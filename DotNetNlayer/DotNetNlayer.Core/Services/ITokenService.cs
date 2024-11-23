@@ -1,7 +1,7 @@
 ﻿using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.Models;
-using SharedLibrary.DTO.Tokens;
 
 namespace DotNetNlayer.Core.Services;
 

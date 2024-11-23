@@ -2,10 +2,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
 using DotNetNlayer.Core.Repositories;
 using DotNetNlayer.Core.Services;
+using DotNetNlayer.Core.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +15,6 @@ using Microsoft.Extensions.Options;
 using SharedLibrary;
 using SharedLibrary.DTO.Exceptions;
 using SharedLibrary.DTO.Result;
-using SharedLibrary.DTO.Tokens;
 
 namespace DotnetNlayer.Service.Services;
 
@@ -37,17 +38,12 @@ public class AppAuthenticationService:IAppAuthenticationService
         _tokenOptions = tokenOptions.Value;
     }
 
-    private static bool IsValidEmail(string email)
-    {
-        // Use the built-in EmailAddressAttribute for validation
-        var emailAttribute = new EmailAddressAttribute();
-        return emailAttribute.IsValid(email);
-    }
+
     public async Task<CustomResponseDto<TokenDto>> CreateTokenAsync(AppUserLoginDto loginDto)
     {
         ArgumentNullException.ThrowIfNull(loginDto);
 
-        var isEmail =IsValidEmail(loginDto.EMailorUserName);
+        var isEmail =ValidationUtils.IsValidEmail(loginDto.EMailorUserName);
         
         var user = isEmail ? await _userManager.FindByEmailAsync(loginDto.EMailorUserName): await _userManager.FindByNameAsync(loginDto.EMailorUserName);
 

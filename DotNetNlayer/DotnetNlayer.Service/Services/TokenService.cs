@@ -3,12 +3,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.Models;
 using DotNetNlayer.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SharedLibrary.DTO.Tokens;
 
 namespace DotnetNlayer.Service.Services;
 
