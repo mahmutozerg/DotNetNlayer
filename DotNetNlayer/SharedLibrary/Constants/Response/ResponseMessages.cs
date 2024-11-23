@@ -2,6 +2,6 @@ namespace SharedLibrary.Constants.Response;
 
 public static class ResponseMessages
 {
-    public static string NotFound { get; set; } = "Not Found";
-    public static string BusinessApiOutOfReach { get; set; } = "Business API out of reach";
+    public const string NotFound = "Not Found";
+    public const string BusinessApiOutOfReach= "Business API out of reach";
 }

@@ -25,8 +25,10 @@ public class UserController:ControllerBase
             
             
         var result = await _userService.CreateAsync(createAppUserDto);
+        
         if (result.StatusCode != 200) 
             return new ObjectResult(result);
+        
         var loginD = new AppUserLoginDto()
         {
             Email = createAppUserDto.Email,
