@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
 using DotNetNlayer.Core.DTO.User;
@@ -15,7 +17,7 @@ using SharedLibrary.DTO.Tokens;
 
 namespace DotnetNlayer.Service.Services;
 
-public class AuthenticationService:IAuthenticationService
+public class AppAuthenticationService:IAppAuthenticationService
 {
     private readonly ITokenService _tokenService;
     private readonly UserManager<AppUser> _userManager;
@@ -25,7 +27,7 @@ public class AuthenticationService:IAuthenticationService
     private readonly RoleManager<AppRole> _roleManager;
 
 
-    public AuthenticationService(ITokenService tokenService, UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IGenericRepository<UserRefreshToken> refreshTokenService, IOptions<List<ClientLoginDto>> tokenOptions, RoleManager<AppRole> roleManager)
+    public AppAuthenticationService(ITokenService tokenService, UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IGenericRepository<UserRefreshToken> refreshTokenService, IOptions<List<ClientLoginDto>> tokenOptions, RoleManager<AppRole> roleManager)
     {
         _tokenService = tokenService;
         _userManager = userManager;
@@ -35,15 +37,22 @@ public class AuthenticationService:IAuthenticationService
         _tokenOptions = tokenOptions.Value;
     }
 
-    
+    private static bool IsValidEmail(string email)
+    {
+        // Use the built-in EmailAddressAttribute for validation
+        var emailAttribute = new EmailAddressAttribute();
+        return emailAttribute.IsValid(email);
+    }
     public async Task<CustomResponseDto<TokenDto>> CreateTokenAsync(AppUserLoginDto loginDto)
     {
         ArgumentNullException.ThrowIfNull(loginDto);
+
+        var isEmail =IsValidEmail(loginDto.EMailorUserName);
         
-        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        var user = isEmail ? await _userManager.FindByEmailAsync(loginDto.EMailorUserName): await _userManager.FindByNameAsync(loginDto.EMailorUserName);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            throw new UserNotFoundException(nameof(UserRefreshToken), loginDto.Email);
+            throw new UserNotFoundException(nameof(UserRefreshToken), loginDto.EMailorUserName);
         
 
         var token = await _tokenService.CreateTokenAsync(user);
@@ -67,7 +76,7 @@ public class AuthenticationService:IAuthenticationService
         return CustomResponseDto<TokenDto>.Success(token,200);
     }
 
-    public async Task<CustomResponseDto<TokenDto>> CreateTokenByRefreshToken(string refreshToken)
+    public async Task<CustomResponseDto<TokenDto>> CreateTokenByRefreshTokenAsync(string refreshToken)
     {
         
         var _refreshToken = await _refreshTokenService
@@ -116,7 +125,7 @@ public class AuthenticationService:IAuthenticationService
         throw new NotFoundException(nameof(_tokenOptions),string.Join("",_tokenOptions.Select(x=> x.Id).ToList()));
     }
     
-    public async Task<CustomResponseDto<NoDataDto>> RevokeRefreshToken(string refreshToken)
+    public async Task<CustomResponseDto<NoDataDto>> RevokeRefreshTokenAsync(string refreshToken)
     {
         var _refreshToken = await _refreshTokenService
             .Where(r => r != null && r.Token == refreshToken)
@@ -133,7 +142,7 @@ public class AuthenticationService:IAuthenticationService
 
     }
 
-    public async Task<CustomResponseDto<NoDataDto>> AddRole(string role)
+    public async Task<CustomResponseDto<NoDataDto>> AddRoleAsync(string role)
     {
         var roleEntity = await _roleManager.FindByNameAsync(role);
         if (roleEntity is not null)
@@ -145,20 +154,10 @@ public class AuthenticationService:IAuthenticationService
 
     }
 
-    public async Task<UserRefreshToken> GetUserRefreshTokenByEmail(string userEmail)
+
+
+    public async Task<CustomResponseDto<List<AppRole>>> GetAllRolesAsync()
     {
-        var user =await _userManager.FindByNameAsync(userEmail.Split("@")[0]);
-        if (user is null)
-            throw new NotFoundException("userEmail", userEmail);
-
-        var refreshToken = await _refreshTokenService
-            .Where(u => u.UserId == user.Id)
-            .FirstOrDefaultAsync();
-
-        if (refreshToken is null)
-            throw new NotFoundException(nameof(UserRefreshToken), userEmail);
-
-        return refreshToken;
-
+        return CustomResponseDto<List<AppRole>>.Success( await _roleManager.Roles.ToListAsync(), (int)HttpStatusCode.OK);
     }
 }

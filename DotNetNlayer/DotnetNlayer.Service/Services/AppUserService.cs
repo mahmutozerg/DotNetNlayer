@@ -19,24 +19,24 @@ using SharedLibrary.DTO.Tokens;
 
 namespace DotnetNlayer.Service.Services;
 
-public class UserService : GenericService<AppUser>, IUserService
+public class AppUserService : GenericService<AppUser>, IAppUserService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IGenericRepository<AppUser> _repository;
+    private readonly IUserRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly RoleManager<AppRole> _roleManager;
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAppAuthenticationService _appAuthenticationService;
     private readonly List<ClientLoginDto> _clientTokenOptions;
     private readonly  ITokenService _tokenService;
-    public UserService(UserManager<AppUser> userManager, IGenericRepository<AppUser> repository, IUnitOfWork unitOfWork,
-        RoleManager<AppRole> roleManager, IAuthenticationService authenticationService,
+    public AppUserService(UserManager<AppUser> userManager, IUserRepository repository, IUnitOfWork unitOfWork,
+        RoleManager<AppRole> roleManager, IAppAuthenticationService appAuthenticationService,
         IOptions<List<ClientLoginDto>> clientTokenOptions, ITokenService tokenService) : base(repository, unitOfWork)
     {
         _userManager = userManager;
         _repository = repository;
         _unitOfWork = unitOfWork;
         _roleManager = roleManager;
-        _authenticationService = authenticationService;
+        _appAuthenticationService = appAuthenticationService;
         _tokenService = tokenService;
         _clientTokenOptions = clientTokenOptions.Value;
     }
@@ -121,7 +121,7 @@ public class UserService : GenericService<AppUser>, IUserService
 
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        var clientToken = _authenticationService.CreateTokenByClient(
+        var clientToken = _appAuthenticationService.CreateTokenByClient(
             new ClientLoginDto()
             {
                 Id = _clientTokenOptions[0].Id,
@@ -198,7 +198,7 @@ public class UserService : GenericService<AppUser>, IUserService
 
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-        var clientToken = _authenticationService.CreateTokenByClient(
+        var clientToken = _appAuthenticationService.CreateTokenByClient(
             new ClientLoginDto()
             {
                 Id = _clientTokenOptions[0].Id,

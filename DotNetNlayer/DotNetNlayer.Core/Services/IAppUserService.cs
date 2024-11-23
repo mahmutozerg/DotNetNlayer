@@ -1,12 +1,13 @@
 using System.Security.Claims;
 using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
+using DotNetNlayer.Core.Repositories;
 using SharedLibrary.DTO.Result;
 using SharedLibrary.DTO.Tokens;
 
 namespace DotNetNlayer.Core.Services;
 
-public interface IUserService:IGenericService<AppUser>
+public interface IAppUserService:IGenericService<AppUser>
 {
     Task<CustomResponseDto<AppUser>> CreateAsync(AppUserCreateDto createAppUserDto);
     

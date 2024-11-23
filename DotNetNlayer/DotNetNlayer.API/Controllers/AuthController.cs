@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Security.Claims;
 using DotNetNlayer.Core.DTO.Client;
@@ -12,18 +13,29 @@ namespace DotNetNlayer.API.Controllers;
 [ApiController]
 public class AuthController:ControllerBase
 {
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAppAuthenticationService _appAuthenticationService;
 
-    public AuthController(IAuthenticationService authenticationService)
+    public AuthController(IAppAuthenticationService appAuthenticationService)
     {
-        _authenticationService = authenticationService;
+        _appAuthenticationService = appAuthenticationService;
+    }
+    [HttpGet]
+    [Authorize]
+    public Task<IActionResult> GetUserRole()
+    {
+        var claimsIdentity = (ClaimsIdentity)User.Identity;
+        var role = claimsIdentity.FindFirst(ClaimTypes.Role)?.Value;
+         
+         
+        return Task.FromResult<IActionResult>(new ObjectResult( CustomResponseDto<string?>.Success(role,(int)HttpStatusCode.OK)));
     }
     
+
     
     [HttpPost]
-    public async Task<IActionResult> CreateTokenByClient(ClientLoginDto clientLoginDto)
+    public  IActionResult CreateTokenByClient(ClientLoginDto clientLoginDto)
     {
-        var result =  _authenticationService.CreateTokenByClient(clientLoginDto);
+        var result =  _appAuthenticationService.CreateTokenByClient(clientLoginDto);
         return new ObjectResult(result);
     }
 
@@ -32,44 +44,24 @@ public class AuthController:ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateToken(AppUserLoginDto loginDto)
     {
-        var result = await _authenticationService.CreateTokenAsync(loginDto);
-        return new ObjectResult(result);
+        return new ObjectResult(await _appAuthenticationService.CreateTokenAsync(loginDto));
     }
     
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> RevokeRefreshToken(string refreshToken)
     {
-        var result = await _authenticationService.RevokeRefreshToken(refreshToken);
-        return new ObjectResult(result);
+        return new ObjectResult(await _appAuthenticationService.RevokeRefreshTokenAsync(refreshToken));
 
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateTokenByRefreshToken(string refreshToken)
     {
-        var result = await _authenticationService.CreateTokenByRefreshToken(refreshToken);
-        return new ObjectResult(result);
+        return new ObjectResult(await _appAuthenticationService.CreateTokenByRefreshTokenAsync(refreshToken));
     }
     
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AddRole(string role)
-    {
-        var result = await _authenticationService.AddRole(role);
 
-        return new ObjectResult(result);
-    }
-     
-     
-    [HttpGet]
-    [Authorize]
-    public Task<IActionResult> GetRole()
-    {
-        var claimsIdentity = (ClaimsIdentity)User.Identity;
-        var role = claimsIdentity.FindFirst(ClaimTypes.Role)?.Value;
-         
-         
-        return Task.FromResult<IActionResult>(new ObjectResult( CustomResponseDto<string?>.Success(role,(int)HttpStatusCode.OK)));
-    }
+    
+
 }

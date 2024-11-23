@@ -11,12 +11,12 @@ namespace DotNetNlayer.API.Controllers;
 [ApiController]
 public class UserController:ControllerBase
 {
-    private readonly IUserService _userService;
-    private readonly IAuthenticationService _authenticationService;
-     public UserController(IUserService userService, IGenericService<AppUser> genericService, IAuthenticationService authenticationService)
+    private readonly IAppUserService _appUserService;
+    private readonly IAppAuthenticationService _appAuthenticationService;
+     public UserController(IAppUserService appUserService, IGenericService<AppUser> genericService, IAppAuthenticationService appAuthenticationService)
      {
-         _userService = userService;
-         _authenticationService = authenticationService;
+         _appUserService = appUserService;
+         _appAuthenticationService = appAuthenticationService;
      }
 
     [HttpPost]
@@ -24,17 +24,17 @@ public class UserController:ControllerBase
     {
             
             
-        var result = await _userService.CreateAsync(createAppUserDto);
+        var result = await _appUserService.CreateAsync(createAppUserDto);
         
         if (result.StatusCode != 200) 
             return new ObjectResult(result);
         
         var loginD = new AppUserLoginDto()
         {
-            Email = createAppUserDto.Email,
+            EMailorUserName = createAppUserDto.Email,
             Password = createAppUserDto.Password
         };
-        var token = await _authenticationService.CreateTokenAsync(loginD);
+        var token = await _appAuthenticationService.CreateTokenAsync(loginD);
         return  new ObjectResult(token);
 
     }
@@ -44,7 +44,7 @@ public class UserController:ControllerBase
     [Authorize]
     public async Task<IActionResult> GetUser()
     {
-        return  new ObjectResult(await _userService.GetByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+        return  new ObjectResult(await _appUserService.GetByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
     }
     
     [HttpDelete]
@@ -52,7 +52,7 @@ public class UserController:ControllerBase
     public async Task<IActionResult> DeleteUser()
     {
 
-        return  new ObjectResult(await _userService.RemoveAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+        return  new ObjectResult(await _appUserService.RemoveAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
     }
     
     [HttpPatch]
@@ -60,7 +60,7 @@ public class UserController:ControllerBase
     public async Task<IActionResult> UpdateUser(AppUserUpdateDto userUpdateDto)
     {
 
-        return  new ObjectResult(await _userService.UpdateAsync(userUpdateDto,(ClaimsIdentity)User.Identity));
+        return  new ObjectResult(await _appUserService.UpdateAsync(userUpdateDto,(ClaimsIdentity)User.Identity));
     }
 
     [HttpPatch]
@@ -68,7 +68,7 @@ public class UserController:ControllerBase
     public async Task<IActionResult> UpdateUserPassword(AppUserUpdatePasswordDto userUpdateDto)
     {
 
-        return  new ObjectResult(await _userService.UpdatePasswordAsync(userUpdateDto,(ClaimsIdentity)User.Identity));
+        return  new ObjectResult(await _appUserService.UpdatePasswordAsync(userUpdateDto,(ClaimsIdentity)User.Identity));
     }
 
 }

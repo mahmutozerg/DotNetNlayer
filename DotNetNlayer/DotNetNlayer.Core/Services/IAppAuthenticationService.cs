@@ -6,18 +6,19 @@ using SharedLibrary.DTO.Tokens;
 
 namespace DotNetNlayer.Core.Services;
 
-public interface IAuthenticationService
+public interface IAppAuthenticationService
 {
     Task<CustomResponseDto<TokenDto>> CreateTokenAsync(AppUserLoginDto loginDto);
 
-    Task<CustomResponseDto<TokenDto>> CreateTokenByRefreshToken(string refreshToken);
+    Task<CustomResponseDto<TokenDto>> CreateTokenByRefreshTokenAsync(string refreshToken);
 
-    Task<CustomResponseDto<NoDataDto>> RevokeRefreshToken(string refreshToken);
+    Task<CustomResponseDto<NoDataDto>> RevokeRefreshTokenAsync(string refreshToken);
 
     CustomResponseDto<ClientTokenDto> CreateTokenByClient(ClientLoginDto clientLoginDto);
-    Task<CustomResponseDto<NoDataDto>> AddRole(string role);
+    Task<CustomResponseDto<NoDataDto>> AddRoleAsync(string role);
 
-    Task<UserRefreshToken> GetUserRefreshTokenByEmail(string userEmail);
+    
+    Task<CustomResponseDto<List<AppRole>>> GetAllRolesAsync();
 
 
 }
