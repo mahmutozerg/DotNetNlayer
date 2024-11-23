@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SharedLibrary;
 
-namespace DotnetNlayer.Repository.Repositories;
+namespace DotnetNlayer.Repository;
 
 public class UnitOfWork:IUnitOfWork
 {

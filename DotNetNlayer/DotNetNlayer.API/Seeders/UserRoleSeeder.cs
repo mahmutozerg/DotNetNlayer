@@ -1,6 +1,7 @@
+using DotNetNlayer.Core.Constants;
 using DotNetNlayer.Core.Models;
-using DotnetNlayer.Repository.Seed;
 using Microsoft.AspNetCore.Identity;
+using SharedLibrary.Constants;
 using SharedLibrary.DTO.Exceptions;
 
 namespace DotNetNlayer.API.Seeders;
@@ -18,8 +19,38 @@ public static class UserRoleSeeder
             var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
             var userManager = services.GetRequiredService<UserManager<AppUser>>();
             
-            await UserSeedData.InitializeAsync(userManager, roleManager);
+            foreach (var role in RoleConstants.Roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new AppRole(role));
+                }
+            }
 
+            const string adminEmail = SeedConstants.AdminEmail;
+            var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if (adminUser == null)
+            {
+                adminUser = new AppUser
+                {
+                    UserName = SeedConstants.AdminUserName,
+                    Email = adminEmail,
+                    EmailConfirmed = true, // Consider email confirmed for seeding
+                    CreatedBy = "SeedData",
+                    UpdatedBy = "SeedData",
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
+                };
+
+                var result = await userManager.CreateAsync(adminUser, SeedConstants.AdminPassword);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                }
+            
+            }
         }
         catch (Exception ex)
         {

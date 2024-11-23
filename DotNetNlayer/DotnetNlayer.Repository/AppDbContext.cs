@@ -1,6 +1,5 @@
 using System.Reflection;
 using DotNetNlayer.Core.Models;
-using DotnetNlayer.Repository.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

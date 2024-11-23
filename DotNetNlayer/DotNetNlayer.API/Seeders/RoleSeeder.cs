@@ -1,5 +1,5 @@
+using DotNetNlayer.Core.Constants;
 using DotNetNlayer.Core.Models;
-using DotnetNlayer.Repository.Seed;
 using Microsoft.AspNetCore.Identity;
 using SharedLibrary.DTO.Exceptions;
 
@@ -15,7 +15,15 @@ public static class RoleSeeder
         try
         {
             var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
-            await RoleSeedData.InitializeAsync(roleManager);
+            foreach (var role in RoleConstants.Roles)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(role);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new AppRole(role));
+              
+                }
+            }        
         }
         catch (Exception ex)
         {
