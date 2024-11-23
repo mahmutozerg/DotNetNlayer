@@ -8,7 +8,7 @@ namespace DotNetNlayer.Core.Services;
 
 public interface IAuthenticationService
 {
-    Task<CustomResponseDto<TokenDto>> CreateTokenAsync(UserLoginDto loginDto);
+    Task<CustomResponseDto<TokenDto>> CreateTokenAsync(AppUserLoginDto loginDto);
 
     Task<CustomResponseDto<TokenDto>> CreateTokenByRefreshToken(string refreshToken);
 

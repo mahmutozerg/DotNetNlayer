@@ -9,4 +9,6 @@ public interface IGenericService<TEntity> where TEntity:class
 
     Task Update(TEntity? entity);
     Task Remove(TEntity entity);
+    
+    
 }

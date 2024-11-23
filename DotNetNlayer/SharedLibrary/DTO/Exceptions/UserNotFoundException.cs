@@ -6,7 +6,7 @@ public class UserNotFoundException:CustomBaseException
 {
     public override string MessageFormat =>  "{propName} : for '{propValue}' value we couldn't find the user.";
     public override string Title => "User Not Found";
-    public override HttpStatusCode StatusCode => HttpStatusCode.Conflict;
+    public override HttpStatusCode StatusCode => HttpStatusCode.BadRequest;
    
     public UserNotFoundException(string propName, string propValue): base()
     {

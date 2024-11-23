@@ -2,8 +2,8 @@
 
 namespace DotNetNlayer.Core.DTO.User;
 
-public class UserDeleteDto
+public class AppUserDeleteDto
 {
-    [Required(ErrorMessage = "Id is required")]
+    [Required(ErrorMessage = $"{nameof(Id)} is required")]
     public string Id { get; set; } 
 }

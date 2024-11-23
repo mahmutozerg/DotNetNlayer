@@ -32,5 +32,5 @@ public class GenericService<T> : IGenericService<T> where T :class
         return Task.CompletedTask;
     }
 
- 
+
 }

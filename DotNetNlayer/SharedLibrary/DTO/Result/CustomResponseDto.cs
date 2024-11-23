@@ -23,17 +23,28 @@ public class CustomResponseDto<TEntity>
 
     public static CustomResponseDto<TEntity> Success(TEntity data, int statusCode)
     {
-        return new CustomResponseDto<TEntity>(true, data, statusCode, null);
+        return new CustomResponseDto<TEntity>(true, data, statusCode, default);
     }
 
     public static CustomResponseDto<TEntity> Success(int statusCode)
     {
-        return new CustomResponseDto<TEntity>(true, default, statusCode, null);
+        return new CustomResponseDto<TEntity>(true, default, statusCode, default);
     }
 
     // AKA fail
     public static CustomResponseDto<TEntity> Exception(ProblemDetails problemDetails)
     {
         return new CustomResponseDto<TEntity>(false, default, (int)problemDetails.Status, problemDetails);
+    }
+    
+    public static CustomResponseDto<TEntity> Fail(string errorMessage,int statusCode,string detail)
+    {
+        var problemDetails = new ProblemDetails()
+        {
+            Status = statusCode,
+            Title = errorMessage,
+            Detail = detail,
+        };
+        return new CustomResponseDto<TEntity>(false, default,statusCode, problemDetails);
     }
 }

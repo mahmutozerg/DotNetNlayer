@@ -24,7 +24,7 @@ public class TokenService:ITokenService
     }
    
     
-    public async Task<TokenDto> CreateTokenAsync(AppUser user)
+    public async Task<TokenDto> CreateTokenAsync(AppUser appUser)
     {
         var accesTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
         var refreshTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
@@ -38,7 +38,7 @@ public class TokenService:ITokenService
             expires: accesTokenExpiration,
             notBefore: DateTime.Now,
             signingCredentials: signingCredentials,
-            claims: await GetClaims(user, _tokenOptions.Audience)
+            claims: await GetClaims(appUser, _tokenOptions.Audience)
         );
 
         var jwtHandler = new JwtSecurityTokenHandler();

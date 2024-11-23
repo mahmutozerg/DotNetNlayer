@@ -36,7 +36,7 @@ public class AuthenticationService:IAuthenticationService
     }
 
     
-    public async Task<CustomResponseDto<TokenDto>> CreateTokenAsync(UserLoginDto loginDto)
+    public async Task<CustomResponseDto<TokenDto>> CreateTokenAsync(AppUserLoginDto loginDto)
     {
         ArgumentNullException.ThrowIfNull(loginDto);
         

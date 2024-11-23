@@ -1,5 +1,20 @@
+using System.Reflection;
+using System.Security.Claims;
 using DotNetNlayer.API.Middleware;
+using DotNetNlayer.Core.Configurations;
+using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.Models;
+using DotNetNlayer.Core.Repositories;
+using DotNetNlayer.Core.Services;
+using DotnetNlayer.Repository;
+using DotnetNlayer.Repository.Repositories;
+using DotnetNlayer.Service.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using SharedLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,14 +23,64 @@ if (builder.Environment.IsDevelopment())
     // Enable user secrets
     builder.Configuration.AddUserSecrets<Program>();
 }
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<AppTokenOptions>();
 
+builder.Services.Configure<AppTokenOptions>(builder.Configuration.GetSection("TokenOptions"));
+builder.Services.Configure<List<ClientLoginDto>>(builder.Configuration.GetSection("Clients"));
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
-
+builder.Services.AddDbContext<AppDbContext>(x =>
+{
+    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"), options =>
+    {
+        options.MigrationsAssembly(Assembly.GetAssembly(typeof(AppDbContext)).GetName().Name);
+        options.EnableRetryOnFailure();
+    });
+});
+builder.Services.AddIdentity<AppUser, AppRole>(opt =>
+    {
+        opt.Password.RequireDigit = true;
+        opt.Password.RequiredLength = 4;
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = tokenOptions.Issuer,
+        ValidateIssuer = true,
+        IssuerSigningKey = SignService.GetSymmetricSecurityKey(tokenOptions.SecurityKey),
+        ValidAudience = tokenOptions.Audience[0],
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
+        RoleClaimType = ClaimTypes.Role,
+        
+    };
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi();
+
+
+builder.Services.AddLogging(o =>
+{
+    o.AddConsole();
+    o.AddDebug();
+});
 
 var app = builder.Build();
 
@@ -25,9 +90,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 app.UseHttpsRedirection();
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization(); 
 app.MapControllers();
 app.UseExceptionHandlingMiddleware();
+
 await app.RunAsync();
