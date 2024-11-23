@@ -19,9 +19,9 @@ public class AdminUserController:ControllerBase
 
     [HttpDelete]
     [Authorize]
-    public async Task<IActionResult> DeleteUser()
+    public async Task<IActionResult> DeleteUser(string id)
     {
-        return  new ObjectResult(await _appUserService.RemoveAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+        return  new ObjectResult(await _appUserService.RemoveAsync(id));
     }
     
     

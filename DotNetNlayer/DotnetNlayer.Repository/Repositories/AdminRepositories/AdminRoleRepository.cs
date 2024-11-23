@@ -9,10 +9,8 @@ namespace DotnetNlayer.Repository.Repositories.AdminRepositories;
 public class AdminRoleRepository:GenericRepository<AppRole>,IAdminRoleRepository
 {
     private readonly DbSet<AppRole> _roles;
-    private readonly RoleManager<AppRole> _roleManager;
-    public AdminRoleRepository(AppDbContext context, RoleManager<AppRole> roleManager) : base(context)
+    public AdminRoleRepository(AppDbContext context) : base(context)
     {
-        _roleManager = roleManager;
         _roles = context.Set<AppRole>();
     }
     

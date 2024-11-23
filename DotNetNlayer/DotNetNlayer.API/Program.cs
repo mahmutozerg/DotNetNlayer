@@ -34,13 +34,19 @@ var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<AppToken
 builder.Services.Configure<AppTokenOptions>(builder.Configuration.GetSection("TokenOptions"));
 builder.Services.Configure<List<ClientLoginDto>>(builder.Configuration.GetSection("Clients"));
 builder.Services.AddScoped<IAppAuthenticationService, AppAuthenticationService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IAdminUserRepository,AdminUserRepository>();
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 builder.Services.AddScoped<IAdminRoleRepository, AdminRoleRepository>();
 builder.Services.AddScoped<IAdminRoleService,AdminRoleService>();
 builder.Services.AddScoped<IAdminUserRoleRepository, AdminUserRoleRepository>();
 builder.Services.AddScoped<IAdminUserRoleService, AdminUserRoleService>();
+
+
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

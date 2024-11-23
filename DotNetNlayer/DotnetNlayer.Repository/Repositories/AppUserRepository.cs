@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetNlayer.Repository.Repositories;
 
-public class UserRepository:GenericRepository<AppUser>,IUserRepository
+public class AppUserRepository:GenericRepository<AppUser>,IAppUserRepository
 {
     private readonly DbSet<AppUser> _users;
-    public UserRepository(AppDbContext context) : base(context)
+    public AppUserRepository(AppDbContext context) : base(context)
     {
         _users = context.Set<AppUser>();
     }

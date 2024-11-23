@@ -23,13 +23,13 @@ namespace DotnetNlayer.Service.Services;
 public class AppUserService : GenericService<AppUser>, IAppUserService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IUserRepository _repository;
+    private readonly IAppUserRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly RoleManager<AppRole> _roleManager;
     private readonly IAppAuthenticationService _appAuthenticationService;
     private readonly List<ClientLoginDto> _clientTokenOptions;
     private readonly  ITokenService _tokenService;
-    public AppUserService(UserManager<AppUser> userManager, IUserRepository repository, IUnitOfWork unitOfWork,
+    public AppUserService(UserManager<AppUser> userManager, IAppUserRepository repository, IUnitOfWork unitOfWork,
         RoleManager<AppRole> roleManager, IAppAuthenticationService appAuthenticationService,
         IOptions<List<ClientLoginDto>> clientTokenOptions, ITokenService tokenService) : base(repository, unitOfWork)
     {
