@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SharedLibrary;
+using SharedLibrary.Constants.Response;
 using SharedLibrary.DTO.Exceptions;
 using SharedLibrary.DTO.Result;
 
@@ -245,7 +246,7 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
 
         if (!passwordChangeResult.Succeeded)
             return CustomResponseDto<TokenDto>
-                .Fail(AuthServerResponseConstants.UpdatePasswordMissMatch,
+                .Fail(ResponseMessages.UpdatePasswordMissMatch,
                     (int)HttpStatusCode.BadRequest,
                     string.Join("",passwordChangeResult.Errors.Select(e=> e.Description)));
         

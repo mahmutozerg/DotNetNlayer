@@ -37,6 +37,8 @@ builder.Services.AddScoped<IAppAuthenticationService, AppAuthenticationService>(
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAdminRoleRepository, AdminRoleRepository>();
+builder.Services.AddScoped<IAdminRoleService,AdminRoleService>();
 builder.Services.AddScoped<IAdminUserRoleRepository, AdminUserRoleRepository>();
 builder.Services.AddScoped<IAdminUserRoleService, AdminUserRoleService>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

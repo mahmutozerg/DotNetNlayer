@@ -13,18 +13,18 @@ public class AdminRoleController :ControllerBase
 {
     
     private readonly IAppAuthenticationService _appAuthenticationService;
-    private readonly IAdminRoleServices _adminRoleServices;
+    private readonly IAdminRoleService _adminRoleService;
 
-    public AdminRoleController(IAppAuthenticationService appAuthenticationService, IAdminRoleServices adminRoleServices)
+    public AdminRoleController(IAppAuthenticationService appAuthenticationService, IAdminRoleService adminRoleService)
     {
         _appAuthenticationService = appAuthenticationService;
-        _adminRoleServices = adminRoleServices;
+        _adminRoleService = adminRoleService;
     }
     
     [HttpPost]
     public async Task<IActionResult> AddRole(AddRoleDto addRoleDto)
     {
-        var result = await _adminRoleServices.AddRoleAsync(addRoleDto.RoleName);
+        var result = await _adminRoleService.AddRoleAsync(addRoleDto.RoleName);
 
         return new ObjectResult(result);
     }
@@ -32,7 +32,7 @@ public class AdminRoleController :ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddRoles(AddRolesDto addRoleDto)
     {
-        var result = await _adminRoleServices.AddRolesAsync(addRoleDto.Roles);
+        var result = await _adminRoleService.AddRolesAsync(addRoleDto);
 
         return new ObjectResult(result);
     }

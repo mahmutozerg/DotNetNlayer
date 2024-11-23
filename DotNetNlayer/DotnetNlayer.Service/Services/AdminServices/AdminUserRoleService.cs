@@ -18,12 +18,14 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
     private readonly IUnitOfWork _unitOfWork;
     private readonly RoleManager<AppRole> _roleManager;
     private readonly UserManager<AppUser> _userManager;
-    public AdminUserRoleService( IUnitOfWork unitOfWork, RoleManager<AppRole> roleManager, IAdminUserRoleRepository userRepository, UserManager<AppUser> userManager) : base(userRepository, unitOfWork)
+    private readonly IAdminRoleService _adminRoleService;
+    public AdminUserRoleService( IUnitOfWork unitOfWork, RoleManager<AppRole> roleManager, IAdminUserRoleRepository userRepository, UserManager<AppUser> userManager, IAdminRoleService adminRoleService) : base(userRepository, unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _roleManager = roleManager;
         _userRepository = userRepository;
         _userManager = userManager;
+        _adminRoleService = adminRoleService;
     }
 
     
@@ -44,8 +46,7 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
     public async Task<CustomResponseDto<NoDataDto>> AddUserToRolesAsync(HashSet<string> roleNames, string identifier)
     {
         var user = await GetUserByIdentifier(identifier);
-        var validRoles = new HashSet<string>();
-        var invalidRoles = new HashSet<string>();
+
 
         if (user == null)
         {
@@ -54,34 +55,9 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
                     (int)HttpStatusCode.NotFound,
                     $"{identifier} not found in records");
         }
-
-        foreach (var roleName in roleNames)
-        {
-            var role = await _roleManager.FindByNameAsync(roleName);
-            if (role != null)
-                validRoles.Add(roleName); 
-            else
-                invalidRoles.Add(roleName); 
-            
-        }
-
-        if (invalidRoles.Any())
-        {
-            return CustomResponseDto<NoDataDto>.
-                Fail(ResponseMessages.NotFound,
-                    (int)HttpStatusCode.NotFound,
-                    $"The following roles were not found: {string.Join(", ", invalidRoles)} none of the roles added try with corrected roles");
-        }
-
-        if (validRoles.Count == 0)
-        {
-            return CustomResponseDto<NoDataDto>.
-                Fail(ResponseMessages.BadRequest,
-                    (int)HttpStatusCode.BadRequest,
-                    "No valid roles were provided to add.");
-        }
-
-        var result = await _userManager.AddToRolesAsync(user, validRoles);
+        
+        
+        var result = await _userManager.AddToRolesAsync(user, roleNames);
 
         if (result.Succeeded)
         {
