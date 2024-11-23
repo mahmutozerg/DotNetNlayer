@@ -1,4 +1,5 @@
 using DotNetNlayer.Core.DTO.Tokens;
+using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Services;
 using DotNetNlayer.Core.Services.AdminServices;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,11 @@ public class AdminUserRoleController:ControllerBase
     {
         return new ObjectResult(await _adminUserRoleService.AddUserToRolesAsync(addUserToRolesDto.Roles, addUserToRolesDto.UserIdentifier));
     }
-    
-    
+
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserFromRole(AppUserRemoveFromRoleDto dto)
+    {
+        return new ObjectResult(await _adminUserRoleService.RemoveAppUserFromRole(dto));
+    }
 }

@@ -1,3 +1,4 @@
+using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
 using SharedLibrary.DTO.Result;
 
@@ -10,4 +11,5 @@ public interface IAdminUserRoleService:IGenericService<AppUser>
 
     Task<CustomResponseDto<NoDataDto>> AddUserToRolesAsync(HashSet<string> roleNames, string identifier);
 
+    Task<CustomResponseDto<NoDataDto>> RemoveAppUserFromRole(AppUserRemoveFromRoleDto dto);
 }

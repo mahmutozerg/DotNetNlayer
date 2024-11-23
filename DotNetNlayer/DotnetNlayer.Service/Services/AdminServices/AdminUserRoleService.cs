@@ -1,4 +1,5 @@
 using System.Net;
+using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
 using DotNetNlayer.Core.Repositories;
 using DotNetNlayer.Core.Repositories.AdminRepositories;
@@ -63,6 +64,27 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
             Fail(ResponseMessages.InternalServerError,
                 (int)HttpStatusCode.InternalServerError,
                 string.Join("",result.Errors.Select(e => e.Description)));
+    }
+
+    // The use of userId is by choice so that you don't accidently remove users. Id's seems less error prone even though are less readeble
+    public async Task<CustomResponseDto<NoDataDto>> RemoveAppUserFromRole(AppUserRemoveFromRoleDto dto)
+    {
+        var role = await _roleManager.FindByNameAsync(dto.RoleName) ;
+        
+        if(role == null)
+            throw new NotFoundException(nameof(dto.RoleName), dto.RoleName);
+        
+        var user = await _userManager.FindByIdAsync(dto.UserId);
+
+        if (user == null)
+            throw new NotFoundException(nameof(user), dto.UserId);
+
+        var result = await _userManager.RemoveFromRoleAsync(user, role.Name!);
+        
+        if(!result.Succeeded)
+            throw new SomethingWentWrongException(nameof(result),string.Join("",result.Errors.Select(e => e.Description)));
+        
+        return CustomResponseDto<NoDataDto>.Success((int)HttpStatusCode.OK);
     }
 
     private async Task<AppUser?> GetUserByIdentifier(string userIdentifier)
