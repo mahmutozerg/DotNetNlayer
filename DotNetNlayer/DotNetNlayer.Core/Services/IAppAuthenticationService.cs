@@ -1,4 +1,5 @@
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Role;
 using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
@@ -15,7 +16,7 @@ public interface IAppAuthenticationService
     Task<CustomResponseDto<NoDataDto>> RevokeRefreshTokenAsync(string refreshToken);
 
     CustomResponseDto<ClientTokenDto> CreateTokenByClient(ClientLoginDto clientLoginDto);
-    Task<CustomResponseDto<NoDataDto>> AddRoleAsync(string role);
+
 
     
     Task<CustomResponseDto<List<AppRole>>> GetAllRolesAsync();

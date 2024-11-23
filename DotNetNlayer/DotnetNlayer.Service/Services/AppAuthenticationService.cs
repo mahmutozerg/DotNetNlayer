@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Role;
 using DotNetNlayer.Core.DTO.Tokens;
 using DotNetNlayer.Core.DTO.User;
 using DotNetNlayer.Core.Models;
@@ -138,17 +139,6 @@ public class AppAuthenticationService:IAppAuthenticationService
 
     }
 
-    public async Task<CustomResponseDto<NoDataDto>> AddRoleAsync(string role)
-    {
-        var roleEntity = await _roleManager.FindByNameAsync(role);
-        if (roleEntity is not null)
-            throw new AlreadyExistException(nameof(role), role);
-        
-        await _roleManager.CreateAsync(new AppRole(role));
-        
-        return CustomResponseDto<NoDataDto>.Success(StatusCodes.Status200OK);
-
-    }
 
 
 
