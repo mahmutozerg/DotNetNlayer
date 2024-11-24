@@ -31,7 +31,7 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
 
     
     
-    public async Task<CustomResponseDto<IList<AppUser>>> GetUsersWithRolesAsync(string roleName)
+    public async Task<CustomResponseDto<IList<AppUser>>> GetUsersInRolesAsync(string roleName)
     {
         if(string.IsNullOrEmpty(roleName) || string.IsNullOrWhiteSpace(roleName))
             throw new ArgumentNullException(nameof(roleName), $"{nameof(roleName)}  is null or empty");
@@ -41,7 +41,7 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
             throw new NotFoundException(nameof(roleName), roleName);
         
         
-        return CustomResponseDto<IList<AppUser>>.Success(await _userRepository.GetUsersWithRolesAsync(roleName),(int)HttpStatusCode.OK);
+        return CustomResponseDto<IList<AppUser>>.Success(await _userRepository.GetUsersInRolesAsync(roleName),(int)HttpStatusCode.OK);
     }
 
     public async Task<CustomResponseDto<NoDataDto>> AddUserToRolesAsync(HashSet<string> roleNames, string identifier)

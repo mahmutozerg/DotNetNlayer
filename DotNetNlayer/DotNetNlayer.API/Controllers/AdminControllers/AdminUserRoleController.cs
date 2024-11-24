@@ -23,7 +23,7 @@ public class AdminUserRoleController:ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetUsersInRole(string roleName)
     {
-        return new ObjectResult(await _adminUserRoleService.GetUsersWithRolesAsync(roleName));
+        return new ObjectResult(await _adminUserRoleService.GetUsersInRolesAsync(roleName));
     }
 
     [HttpPost]

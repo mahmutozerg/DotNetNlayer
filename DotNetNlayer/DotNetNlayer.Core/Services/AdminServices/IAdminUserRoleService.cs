@@ -7,9 +7,11 @@ namespace DotNetNlayer.Core.Services.AdminServices;
 public interface IAdminUserRoleService:IGenericService<AppUser>
 {
     
-    Task<CustomResponseDto<IList<AppUser>>> GetUsersWithRolesAsync(string roleName);
+    Task<CustomResponseDto<IList<AppUser>>> GetUsersInRolesAsync(string roleName);
 
     Task<CustomResponseDto<NoDataDto>> AddUserToRolesAsync(HashSet<string> roleNames, string identifier);
 
     Task<CustomResponseDto<NoDataDto>> RemoveAppUserFromRole(AppUserRemoveFromRoleDto dto);
+    
+    
 }

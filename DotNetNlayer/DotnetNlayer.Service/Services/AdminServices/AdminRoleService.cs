@@ -63,7 +63,7 @@ public class AdminRoleService:GenericService<AppRole>,IAdminRoleService
         }
         return CustomResponseDto<NoDataDto>.Success((int)HttpStatusCode.Created);
     }
-    public async Task<CustomResponseDto<NoDataDto>> RemoveRoleFromUser(string roleName)
+    public async Task<CustomResponseDto<NoDataDto>> DeleteRoleAsync(string roleName)
     {
         var roleEntity = await _roleManager.FindByNameAsync(roleName);
         

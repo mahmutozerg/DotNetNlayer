@@ -47,7 +47,7 @@ public class AdminRoleController :ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteRole(string roleName)
     {
-        return new ObjectResult(await _adminRoleService.RemoveRoleFromUser(roleName));
+        return new ObjectResult(await _adminRoleService.DeleteRoleAsync(roleName));
     }
 
 }

@@ -15,7 +15,7 @@ public class AdminUserRoleRepository:GenericRepository<AppUser>,IAdminUserRoleRe
         _users = context.Set<AppUser>();
     }
 
-    public async Task<IList<AppUser>> GetUsersWithRolesAsync(string roleName)
+    public async Task<IList<AppUser>> GetUsersInRolesAsync(string roleName)
     {
         return await _userManager.GetUsersInRoleAsync(roleName);
     }
