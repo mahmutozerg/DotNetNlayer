@@ -106,10 +106,10 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
 
     private async Task<string> SendReqToBusinessApiAddById(AppUser user)
     {
+        throw new NotImplementedException("SendReqToBusinessApiAddById not implemented");
         using var client = new HttpClient();
         
         const string url = ApiConstants.BusinessApiIp + "/api/User/AddById";
-        return "";
 
         var requestData = new AppUserAddToBusinessApiDto()
         {
@@ -162,14 +162,15 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         _repository.Remove(user);
         await _unitOfWork.SaveChangesAsync();
 
-        await SendDeleteReqToBusinessApi(user);
+        await SendDeleteReqToBusinessApiAsync(user);
         return CustomResponseDto<NoDataDto>.Success(200);
     }
 
 
     
-    public async Task SendDeleteReqToBusinessApi(AppUser appUser)
+    public async Task SendDeleteReqToBusinessApiAsync(AppUser appUser)
     {
+        throw new NotImplementedException("SendDeleteReqToBusinessApiAsync not implemented");
         using var client = new HttpClient();
         const string url = ApiConstants.BusinessApiIp + "/api/User/DeleteById";
 
@@ -182,7 +183,7 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         var jsonData = JsonConvert.SerializeObject(requestData);
 
         var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
+        
         var clientToken = _appAuthenticationService.CreateTokenByClient(
             new ClientLoginDto()
             {

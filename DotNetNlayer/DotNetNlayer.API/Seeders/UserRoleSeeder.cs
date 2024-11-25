@@ -47,7 +47,9 @@ public static class UserRoleSeeder
 
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    var userCreateResult = await userManager.AddToRoleAsync(adminUser, "Admin");
+                    if(!userCreateResult.Succeeded)
+                        throw new SomethingWentWrongException(nameof(AppUser),string.Join(Environment.NewLine, userCreateResult.Errors.Select(e => e.Description)));
                 }
             
             }

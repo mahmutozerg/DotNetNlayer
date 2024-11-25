@@ -19,14 +19,12 @@ public class AdminUserRoleService:GenericService<AppUser>,IAdminUserRoleService
     private readonly IUnitOfWork _unitOfWork;
     private readonly RoleManager<AppRole> _roleManager;
     private readonly UserManager<AppUser> _userManager;
-    private readonly IAdminRoleService _adminRoleService;
-    public AdminUserRoleService( IUnitOfWork unitOfWork, RoleManager<AppRole> roleManager, IAdminUserRoleRepository userRepository, UserManager<AppUser> userManager, IAdminRoleService adminRoleService) : base(userRepository, unitOfWork)
+    public AdminUserRoleService( IUnitOfWork unitOfWork, RoleManager<AppRole> roleManager, IAdminUserRoleRepository userRepository, UserManager<AppUser> userManager) : base(userRepository, unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _roleManager = roleManager;
         _userRepository = userRepository;
         _userManager = userManager;
-        _adminRoleService = adminRoleService;
     }
 
     

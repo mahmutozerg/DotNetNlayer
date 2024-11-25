@@ -18,11 +18,13 @@ public static class RoleSeeder
             foreach (var role in RoleConstants.Roles)
             {
                 var roleExist = await roleManager.RoleExistsAsync(role);
-                if (!roleExist)
-                {
-                    await roleManager.CreateAsync(new AppRole(role));
-              
-                }
+                if (roleExist) 
+                    continue;
+                
+                var roleResult = await roleManager.CreateAsync(new AppRole(role));
+                
+                if(!roleResult.Succeeded)
+                    throw new SomethingWentWrongException(nameof(AppRole),string.Join("",string.Join(Environment.NewLine, roleResult.Errors.Select(e => e.Description))));
             }        
         }
         catch (Exception ex)
