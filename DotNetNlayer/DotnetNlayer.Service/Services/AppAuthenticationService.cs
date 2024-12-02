@@ -136,6 +136,7 @@ public class AppAuthenticationService:IAppAuthenticationService
 
 
         return CustomResponseDto<NoDataDto>.Success(StatusCodes.Status200OK);
+        
 
     }
 

@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DotNetNlayer.BackgroundJob\DotNetNlayer.BackgroundJob.csproj" />
       <ProjectReference Include="..\DotnetNlayer.Service\DotnetNlayer.Service.csproj" />
     </ItemGroup>
 
