@@ -17,6 +17,7 @@ public class DataBaseBackupScheduleJobManager
         _databaseBackupJobService = databaseBackupJobService;
     }
   
+    [DisableConcurrentExecution(28800)] 
     public async Task Process()
     {
         await _databaseBackupJobService.BackupDatabase();
