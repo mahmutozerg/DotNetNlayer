@@ -1,20 +1,13 @@
-using System.Reflection;
-using System.Security.Claims;
 using DotNetNlayer.API.Configurations;
 using DotNetNlayer.API.Configurations.Authenticaiton;
 using DotNetNlayer.API.Configurations.DBContexts;
 using DotNetNlayer.API.Configurations.DIContainer;
 using DotNetNlayer.API.Middleware;
 using DotNetNlayer.API.Seeders;
+using DotNetNlayer.BackgroundJob;
+using DotNetNlayer.BackgroundJob.Schedules;
 using DotNetNlayer.Core.Configurations;
-using DotNetNlayer.Core.Models;
-using DotnetNlayer.Repository;
-using DotnetNlayer.Service.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.IdentityModel.Tokens;
+using DotNetNlayer.Core.DTO.Manager;
 using Scalar.AspNetCore;
 using Hangfire;
 using Microsoft.AspNetCore.Rewrite;
@@ -26,21 +19,18 @@ if (builder.Environment.IsDevelopment())
     // Enable user secrets
     builder.Configuration.AddUserSecrets<Program>();
 }
+
+
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<AppTokenOptions>();
 
-builder.Services.AddCustomServices(builder.Configuration);
+builder.Services.AddCustomRepoServices(builder.Configuration);
 builder.Services.AddAppDbContext(builder.Configuration);
 builder.Services.AddIdentity(builder.Configuration);
 builder.Services.AddHangFireAsHostedService(builder.Configuration);
 builder.Services.AddJwt(tokenOptions);
+builder.Services.AddHangfireRelatedRepoServices(builder.Configuration);
 
-
-
-
-
-
-
-
+builder.Services.Configure<DatabaseBackupJobOptionsDto>(builder.Configuration.GetSection("DatabaseBackupOptions"));
 
 
 builder.Services.AddControllers();
@@ -76,6 +66,7 @@ app.MapControllers();
 app.UseExceptionHandlingMiddleware();
 app.UseHangfireDashboard("/jobs");
 
+RecurringJobs.DatabaseBackupOperation();
 
-
+JobRetriever.GetAllRecurringJobs();
 await app.RunAsync();

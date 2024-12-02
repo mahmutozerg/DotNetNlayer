@@ -1,5 +1,6 @@
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
+using DotNetNlayer.Core.DTO.Manager;
 using DotNetNlayer.Core.Repositories;
 using DotNetNlayer.Core.Repositories.AdminRepositories;
 using DotNetNlayer.Core.Services;
@@ -15,11 +16,10 @@ namespace DotNetNlayer.API.Configurations.DIContainer;
 
 public static class MainDi
 {
-    public static void AddCustomServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddCustomRepoServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AppTokenOptions>(configuration.GetSection("TokenOptions"));
         services.Configure<List<ClientLoginDto>>(configuration.GetSection("Clients"));
-
         services.AddScoped<IAppAuthenticationService, AppAuthenticationService>();
 
         services.AddScoped<IAppUserRepository, AppUserRepository>();
