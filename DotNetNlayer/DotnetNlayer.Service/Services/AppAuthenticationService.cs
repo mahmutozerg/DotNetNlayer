@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SharedLibrary;
+using SharedLibrary.Constants;
 using SharedLibrary.DTO.Exceptions;
 using SharedLibrary.DTO.Result;
 

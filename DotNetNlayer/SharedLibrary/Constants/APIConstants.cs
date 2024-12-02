@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary;
+﻿namespace SharedLibrary.Constants;
 
 public static class ApiConstants
 {
