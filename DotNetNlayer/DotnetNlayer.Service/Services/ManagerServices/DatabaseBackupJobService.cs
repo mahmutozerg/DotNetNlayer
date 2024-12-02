@@ -18,8 +18,8 @@ public class DatabaseBackupJobService:IDatabaseBackupJobService
 
     public async Task BackupDatabase()
     {
-        Console.WriteLine("Starting database backup Service");
-        var commandText = string.Format(DatabaseConstants.BackupCommandText, _databaseBackupJobOptionsDto.DatabaseName, _databaseBackupJobOptionsDto.BackupPath+DateTime.Now.ToShortTimeString(), _databaseBackupJobOptionsDto.DatabaseName);
+        var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var commandText = string.Format(DatabaseConstants.BackupCommandText, _databaseBackupJobOptionsDto.DatabaseName, _databaseBackupJobOptionsDto.BackupPath+time, _databaseBackupJobOptionsDto.DatabaseName);
         
         await using SqlConnection connection = new SqlConnection(_databaseBackupJobOptionsDto.ConnectionString);
         await connection.OpenAsync();
