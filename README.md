@@ -31,6 +31,7 @@ The **Background Job Layer** uses Hangfire to manage and execute background task
 
 ## Backlog (Planned Features)
 
+- **Database Backup Removal**: Create a job that removes the excess backup files
 - **SMTP Server for User Email Confirmation**: Implement an SMTP server to handle user email confirmations.
 - **User Email Reminder**: Create a job that sends periodic emails to users. If the user does not confirm their email within a specified time, the user will be deleted.
 
