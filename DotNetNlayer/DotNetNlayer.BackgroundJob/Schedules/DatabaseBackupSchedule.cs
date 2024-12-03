@@ -3,14 +3,14 @@ using Hangfire;
 
 namespace DotNetNlayer.BackgroundJob.Schedules;
 
-public static class RecurringJobs
+public static class DatabaseBackupSchedule
 { 
     /// <summary>
      ///
      ///    Bu not geleceğe gelsin. Bu arkadaşi program.cs tarafından bir kere çağırılıp bırakılıyor. Anladığım kadarıyla
      /// bunu çalıştıracaksın kardeşim diyor
      /// </summary>
-    public static void DatabaseBackupOperation()
+    public static void SetupDatabaseBackupJob()
     {
         RecurringJob.RemoveIfExists(nameof(DataBaseBackupScheduleJobManager));
         RecurringJob.RemoveIfExists("test");

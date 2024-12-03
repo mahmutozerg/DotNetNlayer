@@ -9,6 +9,7 @@ namespace DotNetNlayer.API.Middleware;
 public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
     private const string UnexpectedErrorMessage = "Unexpected error";
+    
 
     public async Task InvokeAsync(HttpContext context)
     {

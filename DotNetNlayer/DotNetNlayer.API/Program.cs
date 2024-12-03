@@ -66,7 +66,7 @@ app.MapControllers();
 app.UseExceptionHandlingMiddleware();
 app.UseHangfireDashboard("/jobs");
 
-RecurringJobs.DatabaseBackupOperation();
+DatabaseBackupSchedule.SetupDatabaseBackupJob();
 
 JobRetriever.GetAllRecurringJobs();
 await app.RunAsync();
