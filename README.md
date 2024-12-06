@@ -51,7 +51,7 @@ The **Background Job Layer** uses Hangfire to manage and execute background task
     then
     cd DotnetNlayer/DotnetNayer/DotNlayer.API
     dotnet restore
-    dotnet run
+
     ```
 
 3. **Configure the database**:
