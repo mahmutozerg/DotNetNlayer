@@ -44,8 +44,14 @@ The **Background Job Layer** uses Hangfire to manage and execute background task
 
 2. **Install dependencies**:
     ```bash
-    cd yourprojectname
+    Add required Packages To this paths: DotnetNlayer/DotnetNayer/DotNlayer.API and  DotnetNlayer/DotnetNayer/SharedLibrary
+    dotnet add package Microsoft.AspNetCore.Http.Abstractions
+    dotnet add package Microsoft.AspNetCore.Mvc
+
+    then
+    cd DotnetNlayer/DotnetNayer/DotNlayer.API
     dotnet restore
+    dotnet run
     ```
 
 3. **Configure the database**:
