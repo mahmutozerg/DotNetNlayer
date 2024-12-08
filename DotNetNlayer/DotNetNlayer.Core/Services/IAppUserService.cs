@@ -23,5 +23,8 @@ public interface IAppUserService:IGenericService<AppUser>
     Task<CustomResponseDto<TokenDto>> UpdatePasswordAsync(AppUserUpdatePasswordDto userUpdatePasswordDto,
         ClaimsIdentity claimsIdentity);
 
+    Task<CustomResponseDto<NoDataDto>> ConfirmEmailAsync(string email, string token);
+    Task<string> GenerateEmailConfirmationTokenAsync(string email);
+
 }
 

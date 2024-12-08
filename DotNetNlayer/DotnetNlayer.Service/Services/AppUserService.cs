@@ -42,10 +42,58 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         _tokenService = tokenService;
         _clientTokenOptions = clientTokenOptions.Value;
     }
+    public async Task<CustomResponseDto<NoDataDto>> ConfirmEmailAsync(string email,string token)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        
+        if (user == null)
+            throw new UserNotFoundException(nameof(user),$"User with email {email}  not found");
+        
+        if (user.EmailConfirmed)
+            throw new InvalidOperationException($"Email {email} is already confirmed");
+        
+        var isTokenValid = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (!isTokenValid.Succeeded)
+            throw new InvalidParameterException("Email confirmation", $"User with email {email} and with token {token} not found");
+        
+        
+        var result =await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new SomethingWentWrongException("Email confirmation", string.Join("", result.Errors.Select(x=> x.Description).ToList()));
+        
+        return CustomResponseDto<NoDataDto> .Success((int)HttpStatusCode.OK);
+    }
+
+    public async Task<string> GenerateEmailConfirmationTokenAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        
+        if (user == null)
+            throw new UserNotFoundException(nameof(email), email);
+
+        if (user.EmailConfirmed)
+            throw new InvalidOperationException($"Email {email} is already confirmed");
+        
+        var userEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        if (string.IsNullOrEmpty(userEmailToken))
+            throw new SomethingWentWrongException(nameof(userEmailToken),"Something went wrong while creating email verification token");
+
+        Console.WriteLine(userEmailToken);
+        return Uri.EscapeDataString(userEmailToken);
+
+    }
 
     public async Task<CustomResponseDto<AppUser>> CreateAsync(AppUserCreateDto createAppUserDto)
     {
         ComparePassword(createAppUserDto);
+        var emailResult = await _userManager.FindByEmailAsync(createAppUserDto.Email) ;
+        if(emailResult != null)
+            return CustomResponseDto<AppUser>
+                .Fail("Failed to create user",
+                    (int)HttpStatusCode.BadRequest, 
+                    $"Email address '{createAppUserDto.Email}' is taken");
         
         var user = new AppUser
         {
@@ -57,13 +105,6 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
             UpdatedAt = DateTime.Now,
             UpdatedBy = "System",
         };
-
-        var emailResult = await _userManager.FindByEmailAsync(createAppUserDto.Email) ;
-        if(emailResult != null)
-            return CustomResponseDto<AppUser>
-                .Fail("Failed to create user",
-                    (int)HttpStatusCode.BadRequest, 
-                    $"Email address '{createAppUserDto.Email}' is taken");
         
         var result = await _userManager.CreateAsync(user, createAppUserDto.Password);
 
@@ -105,38 +146,6 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
     }
 
 
-    private async Task<string> SendReqToBusinessApiAddById(AppUser user)
-    {
-        throw new NotImplementedException("SendReqToBusinessApiAddById not implemented");
-        using var client = new HttpClient();
-        
-        const string url = ApiConstants.BusinessApiIp + "/api/User/AddById";
-
-        var requestData = new AppUserAddToBusinessApiDto()
-        {
-            Id = user.Id,
-            Email = user.Email,
-
-        };
-
-        var jsonData = JsonConvert.SerializeObject(requestData);
-
-        var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-        var clientToken = _appAuthenticationService.CreateTokenByClient(
-            new ClientLoginDto()
-            {
-                Id = _clientTokenOptions[0].Id,
-                Secret = _clientTokenOptions[0].Secret
-            }
-        );
-        client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", clientToken.Data.AccesToken);
-        
-        var response = await client.PostAsync(url, content);
-
-        return response.StatusCode == HttpStatusCode.Created ? string.Empty : response.Content.ReadAsStringAsync().Result;
-    }
 
     public async Task<CustomResponseDto<AppUser>> GetByNameAsync(string userName)
     {
@@ -166,40 +175,7 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         await SendDeleteReqToBusinessApiAsync(user);
         return CustomResponseDto<NoDataDto>.Success(200);
     }
-
-
     
-    public async Task SendDeleteReqToBusinessApiAsync(AppUser appUser)
-    {
-        throw new NotImplementedException("SendDeleteReqToBusinessApiAsync not implemented");
-        using var client = new HttpClient();
-        const string url = ApiConstants.BusinessApiIp + "/api/User/DeleteById";
-
-        var requestData = new AppUserDeleteDto()
-        {
-            Id = appUser.Id,
-
-        };
-
-        var jsonData = JsonConvert.SerializeObject(requestData);
-
-        var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-        
-        var clientToken = _appAuthenticationService.CreateTokenByClient(
-            new ClientLoginDto()
-            {
-                Id = _clientTokenOptions[0].Id,
-                Secret = _clientTokenOptions[0].Secret
-            }
-        );
-        client.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", clientToken.Data.AccesToken);
-        
-        var response = await client.PostAsync(url, content);
-        if (response.StatusCode != HttpStatusCode.OK)
-            throw new OutOfReachException(url);
-    }
-
     public async Task<CustomResponseDto<NoDataDto>> UpdateAsync(AppUserUpdateDto userUpdateDto, ClaimsIdentity userIdentity)
     {
         var userId = userIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -258,7 +234,7 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
 
 
     }
-
+    
     private static void ComparePassword(AppUserCreateDto appUserCreateDto)
     {
         if (String.CompareOrdinal(appUserCreateDto.Password, appUserCreateDto.ConfirmPassword) != 0)
@@ -267,4 +243,68 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
                 nameof(appUserCreateDto.ConfirmPassword),
                 appUserCreateDto.ConfirmPassword);
     }
+    
+    private async Task<string> SendReqToBusinessApiAddById(AppUser user)
+    {
+        return string.Empty;
+        using var client = new HttpClient();
+        
+        const string url = ApiConstants.BusinessApiIp + "/api/User/AddById";
+
+        var requestData = new AppUserAddToBusinessApiDto()
+        {
+            Id = user.Id,
+            Email = user.Email,
+
+        };
+
+        var jsonData = JsonConvert.SerializeObject(requestData);
+
+        var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+        var clientToken = _appAuthenticationService.CreateTokenByClient(
+            new ClientLoginDto()
+            {
+                Id = _clientTokenOptions[0].Id,
+                Secret = _clientTokenOptions[0].Secret
+            }
+        );
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", clientToken.Data.AccesToken);
+        
+        var response = await client.PostAsync(url, content);
+
+        return response.StatusCode == HttpStatusCode.Created ? string.Empty : response.Content.ReadAsStringAsync().Result;
+    }
+    public async Task SendDeleteReqToBusinessApiAsync(AppUser appUser)
+    {
+        throw new NotImplementedException("SendDeleteReqToBusinessApiAsync not implemented");
+        using var client = new HttpClient();
+        const string url = ApiConstants.BusinessApiIp + "/api/User/DeleteById";
+
+        var requestData = new AppUserDeleteDto()
+        {
+            Id = appUser.Id,
+
+        };
+
+        var jsonData = JsonConvert.SerializeObject(requestData);
+
+        var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        
+        var clientToken = _appAuthenticationService.CreateTokenByClient(
+            new ClientLoginDto()
+            {
+                Id = _clientTokenOptions[0].Id,
+                Secret = _clientTokenOptions[0].Secret
+            }
+        );
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", clientToken.Data.AccesToken);
+        
+        var response = await client.PostAsync(url, content);
+        if (response.StatusCode != HttpStatusCode.OK)
+            throw new OutOfReachException(url);
+    }
+
 }

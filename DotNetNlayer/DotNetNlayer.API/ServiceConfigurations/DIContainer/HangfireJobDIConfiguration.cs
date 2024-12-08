@@ -2,9 +2,9 @@ using DotNetNlayer.Core.DTO.Manager;
 using DotNetNlayer.Core.Services.Manager;
 using DotnetNlayer.Service.Services.ManagerServices;
 
-namespace DotNetNlayer.API.Configurations.DIContainer;
+namespace DotNetNlayer.API.ServiceConfigurations.DIContainer;
 
-public static class HangfireJobDi
+public static class HangfireJobDiConfiguration
 {
     public static void AddHangfireRelatedRepoServices(this IServiceCollection services, IConfiguration configuration)
     {

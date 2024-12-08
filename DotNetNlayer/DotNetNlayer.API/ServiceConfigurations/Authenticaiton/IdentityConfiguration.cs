@@ -2,7 +2,7 @@ using DotNetNlayer.Core.Models;
 using DotnetNlayer.Repository;
 using Microsoft.AspNetCore.Identity;
 
-namespace DotNetNlayer.API.Configurations.Authenticaiton;
+namespace DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
 
 public static class IdentityConfiguration
 {
@@ -14,6 +14,7 @@ public static class IdentityConfiguration
                 opt.Password.RequiredLength = 4;
                 opt.Password.RequireUppercase = false;
                 opt.Password.RequireNonAlphanumeric = false;
+                
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();

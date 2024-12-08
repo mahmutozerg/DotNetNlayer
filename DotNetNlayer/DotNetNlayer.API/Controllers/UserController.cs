@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using DotNetNlayer.Core.DTO.User;
-using DotNetNlayer.Core.Models;
 using DotNetNlayer.Core.Services;
+using DotNetNlayer.Core.Services.SMTPServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System;
 namespace DotNetNlayer.API.Controllers;
 
 [Route("/[controller]/[action]")]
@@ -12,30 +12,56 @@ namespace DotNetNlayer.API.Controllers;
 public class UserController:ControllerBase
 {
     private readonly IAppUserService _appUserService;
-    private readonly IAppAuthenticationService _appAuthenticationService;
-     public UserController(IAppUserService appUserService, IGenericService<AppUser> genericService, IAppAuthenticationService appAuthenticationService)
+    private readonly ISmtpService _smtpService;
+    
+     public UserController(IAppUserService appUserService,  ISmtpService smtpService)
      {
          _appUserService = appUserService;
-         _appAuthenticationService = appAuthenticationService;
+         _smtpService = smtpService;
      }
 
+
+     [HttpGet]
+     public async Task<IActionResult> ConfirmEmail(string email, string token)
+     {
+         
+         return new ObjectResult(await _appUserService.ConfirmEmailAsync(email, token));     
+     }
+
+     [HttpGet]
+     [Authorize]
+     public async Task<IActionResult> RequestEmailConfirmation()
+     {
+         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+         var user =( await _appUserService.GetByIdAsync(userId)).Data;
+         
+         var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(user.Email!);
+        
+         return await ConfirmEmail(emailConfirmationToken, user.Email!);
+         
+     }
+     
     [HttpPost]
-    public async Task<IActionResult> CreateUser(AppUserCreateDto createAppUserDto)
+    public async Task<IActionResult?> CreateUser(AppUserCreateDto createAppUserDto)
     {
             
             
-        var result = await _appUserService.CreateAsync(createAppUserDto);
+        var userResponse = (await _appUserService.CreateAsync(createAppUserDto)) ;
         
-        if (result.StatusCode != 200) 
-            return new ObjectResult(result);
+        var user = userResponse.Data;
+        if (!userResponse.IsSuccess)
+            return new ObjectResult(userResponse) ;
         
-        var loginD = new AppUserLoginDto()
-        {
-            EMailorUserName = createAppUserDto.Email,
-            Password = createAppUserDto.Password
-        };
-        var token = await _appAuthenticationService.CreateTokenAsync(loginD);
-        return  new ObjectResult(token);
+        var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(user.Email!);
+        
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+        var verificationUrl = $"{baseUrl}{Url.Action(nameof(ConfirmEmail), new { email = user.Email, token = emailConfirmationToken })}";
+
+        
+        await _smtpService.SendConfirmationEmailAsync(user.Email!, "Email Confirmation", verificationUrl!);
+
+        return new ObjectResult(Ok());
 
     }
 
@@ -70,5 +96,5 @@ public class UserController:ControllerBase
 
         return  new ObjectResult(await _appUserService.UpdatePasswordAsync(userUpdateDto,(ClaimsIdentity)User.Identity));
     }
-
+    
 }

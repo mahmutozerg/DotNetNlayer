@@ -1,20 +1,21 @@
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Client;
-using DotNetNlayer.Core.DTO.Manager;
 using DotNetNlayer.Core.Repositories;
 using DotNetNlayer.Core.Repositories.AdminRepositories;
 using DotNetNlayer.Core.Services;
 using DotNetNlayer.Core.Services.AdminServices;
+using DotNetNlayer.Core.Services.SMTPServices;
 using DotnetNlayer.Repository;
 using DotnetNlayer.Repository.Repositories;
 using DotnetNlayer.Repository.Repositories.AdminRepositories;
 using DotnetNlayer.Service.Services;
 using DotnetNlayer.Service.Services.AdminServices;
+using DotnetNlayer.Service.Services.SMTPServices;
 using SharedLibrary;
 
-namespace DotNetNlayer.API.Configurations.DIContainer;
+namespace DotNetNlayer.API.ServiceConfigurations.DIContainer;
 
-public static class MainDi
+public static class MainDiConfiguration
 {
     public static void AddCustomRepoServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -37,5 +38,7 @@ public static class MainDi
         services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddTransient<ISmtpService, SmtpService>();
     }
 }

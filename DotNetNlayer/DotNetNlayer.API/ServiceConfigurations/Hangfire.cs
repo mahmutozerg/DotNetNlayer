@@ -1,6 +1,6 @@
 using Hangfire;
 
-namespace DotNetNlayer.API.Configurations;
+namespace DotNetNlayer.API.ServiceConfigurations;
 
 public static class Hangfire
 {

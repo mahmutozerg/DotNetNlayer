@@ -1,9 +1,9 @@
-using DotNetNlayer.API.Configurations;
-using DotNetNlayer.API.Configurations.Authenticaiton;
-using DotNetNlayer.API.Configurations.DBContexts;
-using DotNetNlayer.API.Configurations.DIContainer;
 using DotNetNlayer.API.Middleware;
 using DotNetNlayer.API.Seeders;
+using DotNetNlayer.API.ServiceConfigurations;
+using DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
+using DotNetNlayer.API.ServiceConfigurations.DBContexts;
+using DotNetNlayer.API.ServiceConfigurations.DIContainer;
 using DotNetNlayer.BackgroundJob;
 using DotNetNlayer.BackgroundJob.Schedules;
 using DotNetNlayer.Core.Configurations;
