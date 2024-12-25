@@ -32,12 +32,11 @@ public class UserController:ControllerBase
      [Authorize]
      public async Task<IActionResult> RequestEmailConfirmation()
      {
-         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-         var user =( await _appUserService.GetByIdAsync(userId)).Data;
+         var userEmail = User.FindFirstValue(ClaimTypes.Email);
          
-         var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(user.Email!);
+         var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(userEmail);
         
-         return await ConfirmEmail(emailConfirmationToken, user.Email!);
+         return await ConfirmEmail(emailConfirmationToken, userEmail);
          
      }
      

@@ -50,14 +50,17 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
         if (user == null)
             throw new UserNotFoundException(nameof(user),$"User with email {email}  not found");
         
-        if (user.EmailConfirmed)
-            throw new InvalidOperationException($"Email {email} is already confirmed");
         
         var isTokenValid = await _userManager.ConfirmEmailAsync(user, token);
 
         if (!isTokenValid.Succeeded)
             throw new InvalidParameterException("Email confirmation", $"User with email {email} and with token {token} not found");
+
         
+        if (user.EmailConfirmed)
+            throw new InvalidOperationException($"Email {email} is already confirmed");
+        
+       
         
         var result =await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
