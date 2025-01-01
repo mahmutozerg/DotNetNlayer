@@ -23,7 +23,12 @@ if (builder.Environment.IsDevelopment())
 
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<AppTokenOptions>();
 
-builder.Services.AddCustomRepoServices(builder.Configuration);
+builder.Services.AddAuthenticationServices();
+builder.Services.AddAppUserServices();
+builder.Services.AddAdminServices();
+builder.Services.AddEmailConfirmationServices(builder.Configuration);
+
+builder.Services.AddCustomServices(builder.Configuration);
 builder.Services.AddAppDbContext(builder.Configuration);
 builder.Services.AddIdentity(builder.Configuration);
 builder.Services.AddHangFireAsHostedService(builder.Configuration);
