@@ -36,7 +36,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
                     break;
                 }
                 default:
-                    messages.Add(string.Join("",exception.Message.Split(" ")));
+                    messages.Add(string.Join(" ",exception.Message.Split(" ")));
                     break;
             }
 

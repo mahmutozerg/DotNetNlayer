@@ -13,11 +13,13 @@ public class UserController:ControllerBase
 {
     private readonly IAppUserService _appUserService;
     private readonly ISmtpService _smtpService;
+    private readonly IEmailConfirmationService _emailConfirmationService;
     
-     public UserController(IAppUserService appUserService,  ISmtpService smtpService)
+     public UserController(IAppUserService appUserService,  ISmtpService smtpService, IEmailConfirmationService emailConfirmationService)
      {
          _appUserService = appUserService;
          _smtpService = smtpService;
+         _emailConfirmationService = emailConfirmationService;
      }
 
 
@@ -25,7 +27,7 @@ public class UserController:ControllerBase
      public async Task<IActionResult> ConfirmEmail(string email, string token)
      {
          
-         return new ObjectResult(await _appUserService.ConfirmEmailAsync(email, token));     
+         return new ObjectResult(await _emailConfirmationService.ConfirmEmailAsync(email, token));     
      }
 
      [HttpGet]
@@ -34,9 +36,9 @@ public class UserController:ControllerBase
      {
          var userEmail = User.FindFirstValue(ClaimTypes.Email);
          
-         var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(userEmail);
+         var emailConfirmationToken = await _emailConfirmationService.GenerateEmailConfirmationTokenAsync(userEmail);
         
-         return await ConfirmEmail(emailConfirmationToken, userEmail);
+         return await ConfirmEmail( userEmail,emailConfirmationToken);
          
      }
      
@@ -51,7 +53,7 @@ public class UserController:ControllerBase
         if (!userResponse.IsSuccess)
             return new ObjectResult(userResponse) ;
         
-        var emailConfirmationToken = await _appUserService.GenerateEmailConfirmationTokenAsync(user.Email!);
+        var emailConfirmationToken = await _emailConfirmationService.GenerateEmailConfirmationTokenAsync(user.Email!);
         
         var baseUrl = $"{Request.Scheme}://{Request.Host}";
 

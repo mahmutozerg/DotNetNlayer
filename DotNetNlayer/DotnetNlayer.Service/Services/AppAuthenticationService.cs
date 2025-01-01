@@ -50,7 +50,7 @@ public class AppAuthenticationService:IAppAuthenticationService
         var user = isEmail ? await _userManager.FindByEmailAsync(loginDto.EMailorUserName): await _userManager.FindByNameAsync(loginDto.EMailorUserName);
 
         if (user is null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            throw new UserNotFoundException(nameof(UserRefreshToken), loginDto.EMailorUserName);
+            throw new UserNotFoundException(nameof(AppUserLoginDto), loginDto.EMailorUserName);
         
 
         var token = await _tokenService.CreateTokenAsync(user);

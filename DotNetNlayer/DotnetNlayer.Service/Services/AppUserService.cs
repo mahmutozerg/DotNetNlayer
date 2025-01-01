@@ -26,67 +26,20 @@ public class AppUserService : GenericService<AppUser>, IAppUserService
     private readonly UserManager<AppUser> _userManager;
     private readonly IAppUserRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly RoleManager<AppRole> _roleManager;
     private readonly IAppAuthenticationService _appAuthenticationService;
     private readonly List<ClientLoginDto> _clientTokenOptions;
     private readonly  ITokenService _tokenService;
-    public AppUserService(UserManager<AppUser> userManager, IAppUserRepository repository, IUnitOfWork unitOfWork,
-        RoleManager<AppRole> roleManager, IAppAuthenticationService appAuthenticationService,
+    public AppUserService(UserManager<AppUser> userManager, IAppUserRepository repository, IUnitOfWork unitOfWork,IAppAuthenticationService appAuthenticationService,
         IOptions<List<ClientLoginDto>> clientTokenOptions, ITokenService tokenService) : base(repository, unitOfWork)
     {
         _userManager = userManager;
         _repository = repository;
         _unitOfWork = unitOfWork;
-        _roleManager = roleManager;
         _appAuthenticationService = appAuthenticationService;
         _tokenService = tokenService;
         _clientTokenOptions = clientTokenOptions.Value;
     }
-    public async Task<CustomResponseDto<NoDataDto>> ConfirmEmailAsync(string email,string token)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
 
-        
-        if (user == null)
-            throw new UserNotFoundException(nameof(user),$"User with email {email}  not found");
-        
-        
-        var isTokenValid = await _userManager.ConfirmEmailAsync(user, token);
-
-        if (!isTokenValid.Succeeded)
-            throw new InvalidParameterException("Email confirmation", $"User with email {email} and with token {token} not found");
-
-        
-        if (user.EmailConfirmed)
-            throw new InvalidOperationException($"Email {email} is already confirmed");
-        
-       
-        
-        var result =await _userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-            throw new SomethingWentWrongException("Email confirmation", string.Join("", result.Errors.Select(x=> x.Description).ToList()));
-        
-        return CustomResponseDto<NoDataDto> .Success((int)HttpStatusCode.OK);
-    }
-
-    public async Task<string> GenerateEmailConfirmationTokenAsync(string email)
-    {
-        var user = await _userManager.FindByEmailAsync(email);
-        
-        if (user == null)
-            throw new UserNotFoundException(nameof(email), email);
-
-        if (user.EmailConfirmed)
-            throw new InvalidOperationException($"Email {email} is already confirmed");
-        
-        var userEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        if (string.IsNullOrEmpty(userEmailToken))
-            throw new SomethingWentWrongException(nameof(userEmailToken),"Something went wrong while creating email verification token");
-
-        Console.WriteLine(userEmailToken);
-        return Uri.EscapeDataString(userEmailToken);
-
-    }
 
     public async Task<CustomResponseDto<AppUser>> CreateAsync(AppUserCreateDto createAppUserDto)
     {
