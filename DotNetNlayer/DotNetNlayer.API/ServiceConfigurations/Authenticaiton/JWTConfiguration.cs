@@ -5,7 +5,7 @@ using DotnetNlayer.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DotNetNlayer.API.Configurations.Authenticaiton;
+namespace DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
 
 
 public static class JwtConfiguration

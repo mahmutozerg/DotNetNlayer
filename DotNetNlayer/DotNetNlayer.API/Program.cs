@@ -1,9 +1,9 @@
-using DotNetNlayer.API.Configurations;
-using DotNetNlayer.API.Configurations.Authenticaiton;
-using DotNetNlayer.API.Configurations.DBContexts;
-using DotNetNlayer.API.Configurations.DIContainer;
 using DotNetNlayer.API.Middleware;
 using DotNetNlayer.API.Seeders;
+using DotNetNlayer.API.ServiceConfigurations;
+using DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
+using DotNetNlayer.API.ServiceConfigurations.DBContexts;
+using DotNetNlayer.API.ServiceConfigurations.DIContainer;
 using DotNetNlayer.BackgroundJob;
 using DotNetNlayer.BackgroundJob.Schedules;
 using DotNetNlayer.Core.Configurations;
@@ -23,15 +23,20 @@ if (builder.Environment.IsDevelopment())
 
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<AppTokenOptions>();
 
-builder.Services.AddCustomRepoServices(builder.Configuration);
+builder.Services.AddAuthenticationServices();
+builder.Services.AddAppUserServices();
+builder.Services.AddAdminServices();
+builder.Services.AddEmailConfirmationServices(builder.Configuration);
+builder.Services.AddCustomServices(builder.Configuration);
+
 builder.Services.AddAppDbContext(builder.Configuration);
-builder.Services.AddIdentity(builder.Configuration);
+builder.Services.AddIdentityConfigurations();
 builder.Services.AddHangFireAsHostedService(builder.Configuration);
+
 builder.Services.AddJwt(tokenOptions);
-builder.Services.AddHangfireRelatedRepoServices(builder.Configuration);
+builder.Services.AddHangfireRelatedServices(builder.Configuration);
 
 builder.Services.Configure<DatabaseBackupJobOptionsDto>(builder.Configuration.GetSection("DatabaseBackupOptions"));
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -57,6 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 var options = new RewriteOptions()
     .AddRedirect("^$", "scalar/v1");  // Redirect root to /scalar/v1
+
 app.UseRewriter(options);
 
 app.UseHttpsRedirection();

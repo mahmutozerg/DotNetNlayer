@@ -3,7 +3,7 @@ using DotnetNlayer.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace DotNetNlayer.API.Configurations.DBContexts;
+namespace DotNetNlayer.API.ServiceConfigurations.DBContexts;
 
 public static class AppDbContextConfiguration
 {

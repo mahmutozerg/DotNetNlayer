@@ -2,11 +2,11 @@ using DotNetNlayer.Core.DTO.Manager;
 using DotNetNlayer.Core.Services.Manager;
 using DotnetNlayer.Service.Services.ManagerServices;
 
-namespace DotNetNlayer.API.Configurations.DIContainer;
+namespace DotNetNlayer.API.ServiceConfigurations.DIContainer;
 
-public static class HangfireJobDi
+public static class HangfireJobDiConfiguration
 {
-    public static void AddHangfireRelatedRepoServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHangfireRelatedServices(this IServiceCollection services, IConfiguration configuration)
     {
 
         services.AddScoped<IDatabaseBackupJobService, DatabaseBackupJobService>();
