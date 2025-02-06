@@ -6,7 +6,7 @@ namespace DotNetNlayer.API.ServiceConfigurations.DIContainer;
 
 public static class HangfireJobDiConfiguration
 {
-    public static void AddHangfireRelatedRepoServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddHangfireRelatedServices(this IServiceCollection services, IConfiguration configuration)
     {
 
         services.AddScoped<IDatabaseBackupJobService, DatabaseBackupJobService>();

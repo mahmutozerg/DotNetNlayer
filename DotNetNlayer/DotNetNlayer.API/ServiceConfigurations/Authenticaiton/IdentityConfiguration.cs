@@ -6,7 +6,7 @@ namespace DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
 
 public static class IdentityConfiguration
 {
-    public static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    public static void AddIdentityConfigurations(this IServiceCollection services)
     {
         services.AddIdentity<AppUser, AppRole>(opt =>
             {

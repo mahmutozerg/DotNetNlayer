@@ -27,16 +27,16 @@ builder.Services.AddAuthenticationServices();
 builder.Services.AddAppUserServices();
 builder.Services.AddAdminServices();
 builder.Services.AddEmailConfirmationServices(builder.Configuration);
-
 builder.Services.AddCustomServices(builder.Configuration);
+
 builder.Services.AddAppDbContext(builder.Configuration);
-builder.Services.AddIdentity(builder.Configuration);
+builder.Services.AddIdentityConfigurations();
 builder.Services.AddHangFireAsHostedService(builder.Configuration);
+
 builder.Services.AddJwt(tokenOptions);
-builder.Services.AddHangfireRelatedRepoServices(builder.Configuration);
+builder.Services.AddHangfireRelatedServices(builder.Configuration);
 
 builder.Services.Configure<DatabaseBackupJobOptionsDto>(builder.Configuration.GetSection("DatabaseBackupOptions"));
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,6 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 var options = new RewriteOptions()
     .AddRedirect("^$", "scalar/v1");  // Redirect root to /scalar/v1
+
 app.UseRewriter(options);
 
 app.UseHttpsRedirection();
