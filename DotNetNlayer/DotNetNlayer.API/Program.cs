@@ -4,12 +4,10 @@ using DotNetNlayer.API.ServiceConfigurations;
 using DotNetNlayer.API.ServiceConfigurations.Authenticaiton;
 using DotNetNlayer.API.ServiceConfigurations.DBContexts;
 using DotNetNlayer.API.ServiceConfigurations.DIContainer;
-using DotNetNlayer.BackgroundJob;
-using DotNetNlayer.BackgroundJob.Schedules;
+
 using DotNetNlayer.Core.Configurations;
 using DotNetNlayer.Core.DTO.Manager;
 using Scalar.AspNetCore;
-using Hangfire;
 using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +29,6 @@ builder.Services.AddCustomServices(builder.Configuration);
 
 builder.Services.AddAppDbContext(builder.Configuration);
 builder.Services.AddIdentityConfigurations();
-builder.Services.AddHangFireAsHostedService(builder.Configuration);
 
 builder.Services.AddJwt(tokenOptions);
 builder.Services.AddHangfireRelatedServices(builder.Configuration);
@@ -70,9 +67,6 @@ app.UseAuthentication();
 app.UseAuthorization(); 
 app.MapControllers();
 app.UseExceptionHandlingMiddleware();
-app.UseHangfireDashboard("/jobs");
 
-DatabaseBackupSchedule.SetupDatabaseBackupJob();
 
-JobRetriever.GetAllRecurringJobs();
 await app.RunAsync();
